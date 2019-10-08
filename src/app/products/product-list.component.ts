@@ -4,6 +4,7 @@ import { EMPTY } from 'rxjs';
 
 import { ProductService } from './product.service';
 import { catchError, map } from 'rxjs/operators';
+import { ProductCategoryService } from '../product-categories/product-category.service';
 
 @Component({
   templateUrl: './product-list.component.html',
@@ -13,7 +14,6 @@ import { catchError, map } from 'rxjs/operators';
 export class ProductListComponent {
   pageTitle = 'Product List';
   errorMessage = '';
-  categories;
   selectedCategoryId = 1;
 
   products$ = this.productService.productsWithCategory$
@@ -24,6 +24,14 @@ export class ProductListComponent {
       })
     );
 
+  categories$ = this.productCategoryService.productCategories$
+  .pipe(
+    catchError(err => {
+      this.errorMessage = err;
+      return EMPTY;
+    })
+  );
+
   productsSimpleFilter$ = this.productService.productsWithCategory$
     .pipe(
       map(products =>
@@ -31,13 +39,14 @@ export class ProductListComponent {
           this.selectedCategoryId ? this.selectedCategoryId === product.categoryId : true))
     );
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService,
+              private productCategoryService: ProductCategoryService) { }
 
   onAdd(): void {
     console.log('Not yet implemented');
   }
 
   onSelected(categoryId: string): void {
-    console.log('Not yet implemented');
+    this.selectedCategoryId = +categoryId;
   }
 }
