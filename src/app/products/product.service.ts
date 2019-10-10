@@ -39,7 +39,7 @@ export class ProductService {
         searchKey: [product.productName]
       }) as Product)
     )
-  )
+  );
 
   constructor(private http: HttpClient,
               private productCategoryService: ProductCategoryService,
