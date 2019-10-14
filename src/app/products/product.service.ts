@@ -83,7 +83,8 @@ export class ProductService {
         from(selectedProduct.supplierIds)
           .pipe(
             mergeMap(supplierId => this.http.get<Supplier>(`${this.suppliersUrl}/${supplierId}`)),
-            toArray()
+            toArray(),
+            tap(suppliers => console.log('product suppliers', JSON.stringify(suppliers)))
           )
       )
     );
